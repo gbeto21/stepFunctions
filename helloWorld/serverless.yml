@@ -32,7 +32,14 @@ stepFunctions:
             Type: Task
             Resource: 
               Fn::GetAtt: [add, Arn]
-            Next: Double
+            Next: IsBigNumber
+          IsBigNumber:
+            Type: Choice
+            Choices: 
+            - Variable: $
+              NumericGreaterThan: 50
+              Next: DoubleBigNumber
+            Default: Double
           Double: 
             Type: Task
             Resource:
@@ -40,9 +47,9 @@ stepFunctions:
             End: true
             Retry:
               - ErrorEquals: [NumberIsTooBig]
-                MaxAttemps: 0
+                MaxAttempts: 0
               - ErrorEquals: [States.ALL]
-                MaxAttemps: 3
+                MaxAttempts: 3
             Catch:
               - ErrorEquals: [NumberIsTooBig]
                 Next: DoubleBigNumber
