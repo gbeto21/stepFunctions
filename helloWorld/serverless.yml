@@ -16,6 +16,9 @@ functions:
   
   double:
     handler: handler.double
+  
+  doubleBigNumber:
+    handler: handler.doubleBigNumber
 
 stepFunctions:
   stateMachines:
@@ -40,3 +43,11 @@ stepFunctions:
                 MaxAttemps: 0
               - ErrorEquals: [States.ALL]
                 MaxAttemps: 3
+            Catch:
+              - ErrorEquals: [NumberIsTooBig]
+                Next: DoubleBigNumber
+          DoubleBigNumber:
+            Type: Task
+            Resource: 
+              Fn::GetAtt: [doubleBigNumber, Arn]
+            End: true
